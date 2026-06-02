@@ -165,6 +165,8 @@
     // Loading state
     submitBtn.classList.add('btn-loading');
     submitBtn.disabled = true;
+    submitBtn.setAttribute('aria-busy', 'true');
+    form.setAttribute('aria-busy', 'true');
     statusEl.className = 'form-status';
 
     try {
@@ -206,6 +208,8 @@
     } finally {
       submitBtn.classList.remove('btn-loading');
       submitBtn.disabled = false;
+      submitBtn.removeAttribute('aria-busy');
+      form.removeAttribute('aria-busy');
     }
   });
 })();
