@@ -235,6 +235,26 @@
 /* ----------------------------------------------------------------
    5. LICZNIKI STATYSTYK (animacja liczb w sekcji hero)
    ---------------------------------------------------------------- */
+/* ----------------------------------------------------------------
+   STICKY CTA — ukrywanie nad sekcją kontakt + footer
+   ---------------------------------------------------------------- */
+(function initStickyCta() {
+  const cta = document.querySelector('[data-sticky-cta]');
+  const target = document.getElementById('kontakt');
+  if (!cta || !target) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        cta.classList.toggle('hide', entry.isIntersecting);
+      });
+    },
+    { rootMargin: '0px 0px -40% 0px' }
+  );
+  observer.observe(target);
+})();
+
+
 (function initCounters() {
   const counters = document.querySelectorAll('[data-count]');
   if (!counters.length) return;
