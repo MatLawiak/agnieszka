@@ -105,10 +105,13 @@ body {
   line-height: var(--line-height-body);
   color: var(--color-text);
   background-color: var(--color-bg);
-  background-image: url('../img/bg-19.png');
-  background-size: 600px auto;
-  background-repeat: repeat;
-  background-blend-mode: multiply;
+  /* Nowa papierowa tekstura 4K upscale — jednolite tło na całej stronie,
+     bez kafelków, fixed dla efektu ciągłego pod scrollem */
+  background-image: url('../img/bg-hero-paper.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -482,15 +485,13 @@ section {
    7. HERO — bez logo, "Coaching" duże + "w zgodzie ze sobą" mniejsze
    ---------------------------------------------------------------- */
 .hero {
-  min-height: calc(100svh - var(--nav-height));
+  /* Brak min-height — sekcja przyjmuje wysokość treści */
   padding-top: calc(var(--nav-height) + var(--space-xl));
   padding-bottom: var(--space-2xl);
   display: flex;
   align-items: center;
-  background-color: var(--color-bg-hero);
-  background-image: url('../img/bg-19.png');
-  background-size: 800px auto;
-  background-repeat: repeat;
+  /* Tło dziedziczone z body (bg-19.png — jednolite z resztą strony) */
+  background-color: transparent;
   position: relative;
   overflow: hidden;
 }
@@ -528,8 +529,71 @@ section {
   position: relative;
   z-index: 1;
   width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: var(--space-2xl);
+  align-items: center;
 }
-.hero-content { max-width: 760px; }
+.hero-content { max-width: 640px; }
+
+/* ===== Zdjęcie Agnieszki po prawej (tylko desktop) ===== */
+.hero-photo {
+  position: relative;
+  justify-self: end;
+  width: clamp(280px, 32vw, 420px);
+  aspect-ratio: 3/4;
+  animation: heroPhotoIn .9s var(--ease-smooth) .2s both;
+}
+.hero-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  background: var(--color-ivory);
+  position: relative;
+  z-index: 1;
+}
+/* Plamka moss-green — tło za zdjęciem (lewy dolny + prawy górny),
+   ten sam element graficzny pasuje do Main i sekcji Kim jestem (mobile) */
+.hero-photo::before {
+  content: '';
+  position: absolute;
+  left: -4rem;
+  bottom: -4rem;
+  width: 75%;
+  aspect-ratio: 1;
+  background-image: url('../img/blob-moss-green.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.30;
+  z-index: 0;
+  pointer-events: none;
+  transform: rotate(-15deg);
+}
+.hero-photo::after {
+  content: '';
+  position: absolute;
+  right: -3rem;
+  top: -2.5rem;
+  width: 70%;
+  aspect-ratio: 1;
+  background-image: url('../img/blob-moss-green.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.22;
+  z-index: 0;
+  pointer-events: none;
+  transform: rotate(120deg);
+}
+
+@keyframes heroPhotoIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 .hero-title {
   display: flex;
@@ -592,7 +656,7 @@ section {
   flex-wrap: wrap;
   gap: var(--space-md);
   align-items: center;
-  margin-bottom: var(--space-xl);
+  margin-bottom: 0;   /* nie ma już trust list pod spodem */
 }
 
 .hero-trust {
@@ -686,24 +750,52 @@ section {
   max-width: 60ch;
 }
 
+.help-outro {
+  max-width: 720px;
+  margin: var(--space-xl) auto 0;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+  color: var(--color-primary-dark);
+  line-height: 1.6;
+}
+
 
 /* ----------------------------------------------------------------
    9. SEKCJA "KIM JESTEM?" — zdjęcie + tekst
    ---------------------------------------------------------------- */
 .about-section {
-  background-color: var(--color-bg);
-  background-image: url('../img/bg-22.png');
+  /* Wizualne oddzielenie od hero — Soft Ivory z papierową teksturą */
+  background-color: var(--color-ivory);
+  background-image: url('../img/bg-hero-paper.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  position: relative;
 }
 .about-section::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(245, 243, 234, .82);
+  background: rgba(227, 225, 215, .65);  /* Soft Ivory overlay 65% */
   pointer-events: none;
 }
+.about-section::after {
+  /* Subtelna plamka moss-green w prawym górnym jako delikatny akcent */
+  content: '';
+  position: absolute;
+  top: 6%;
+  right: -4%;
+  width: clamp(200px, 24vw, 380px);
+  aspect-ratio: 1;
+  background-image: url('../img/blob-moss-green.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.12;
+  pointer-events: none;
+}
+.about-section > .container { position: relative; z-index: 1; }
 .about-inner {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
@@ -711,6 +803,21 @@ section {
   align-items: center;
   position: relative;
   z-index: 1;
+}
+
+/* Wariant bez zdjęcia (zdjęcie przeniesione do hero) — jednokolumnowy, centrowany */
+.about-inner--no-photo {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+  margin-inline: auto;
+  text-align: left;
+}
+.about-inner--no-photo .about-content { padding-top: 0; }
+.about-inner--no-photo p { max-width: 65ch; }
+
+/* Zdjęcie w sekcji "Kim jestem?" — TYLKO na mobile (gdy hero-photo jest ukryte) */
+.about-photo-mobile {
+  display: none;   /* desktop: ukryte */
 }
 
 .about-photo-wrap { position: relative; }
@@ -777,6 +884,59 @@ section {
   font-style: italic;
   color: var(--color-primary-dark);
   line-height: 1.45;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0;
+}
+
+/* Uwypuklony wariant cytatu — bardziej widoczny, wyróżnia się na sekcji */
+.about-quote--feature {
+  margin: var(--space-2xl) 0 var(--space-lg);
+  padding: var(--space-xl) var(--space-2xl);
+  background:
+    linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-mid) 100%);
+  border-left: 6px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 18px 48px rgba(52, 70, 22, .22);
+  transform: rotate(-0.6deg);
+  position: relative;
+  overflow: hidden;
+}
+.about-quote--feature::before {
+  content: '"';
+  font-family: var(--font-heading);
+  font-size: 12rem;
+  color: var(--color-accent-light);
+  opacity: .25;
+  position: absolute;
+  top: -3.5rem;
+  left: 0.5rem;
+  line-height: 1;
+  pointer-events: none;
+}
+/* Subtelna botanika w prawym dolnym rogu cytatu */
+.about-quote--feature::after {
+  content: '';
+  position: absolute;
+  right: -2rem;
+  bottom: -2rem;
+  width: 180px;
+  height: 180px;
+  background-image: url('../img/blob-moss-green.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+  opacity: 0.2;
+  pointer-events: none;
+}
+.about-quote--feature p {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 2.2vw, 1.85rem);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-ivory);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
   position: relative;
   z-index: 1;
   margin-bottom: 0;
@@ -977,7 +1137,7 @@ section {
    ---------------------------------------------------------------- */
 .packages-section {
   background-color: var(--color-bg-alt);
-  background-image: url('../img/bg-25.png');
+  background-image: url('../img/bg-22.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -986,7 +1146,7 @@ section {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(245, 243, 234, .9);
+  background: rgba(245, 243, 234, .85);
   pointer-events: none;
 }
 .packages-section > .container { position: relative; z-index: 1; }
@@ -997,6 +1157,18 @@ section {
   gap: var(--space-lg);
   max-width: 980px;
   margin-inline: auto;
+}
+/* Wariant z 3 kartami — szersza siatka */
+.packages-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1180px;
+  gap: var(--space-md);
+}
+@media (max-width: 900px) {
+  .packages-grid--3 {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
 }
 
 .package-card {
@@ -1195,10 +1367,7 @@ section {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('../img/bg-19.png');
-  background-size: 600px auto;
-  background-repeat: repeat;
-  opacity: 0.5;
+  background-color: rgba(245, 243, 234, .4);
   pointer-events: none;
 }
 .contact-section::after {
@@ -1468,9 +1637,17 @@ textarea { resize: vertical; min-height: 140px; }
   font-size: var(--size-body-sm);
   color: rgba(227, 225, 215, .8);
   line-height: 1.7;
-  margin: 0;
+  margin: 0 0 var(--space-sm);
 }
 .footer-name strong { color: var(--color-white); font-weight: 600; }
+
+.footer-credit {
+  font-size: 0.78rem;
+  color: rgba(227, 225, 215, .55);
+  margin: 0;
+  font-style: italic;
+  letter-spacing: 0.02em;
+}
 
 .footer-contact-col h4,
 .footer-legal-col h4 {
@@ -1644,9 +1821,65 @@ textarea { resize: vertical; min-height: 140px; }
   .nav-hamburger { display: flex; }
 }
 
-/* Tablet układ: kontakt jedna kolumna */
+/* Tablet układ: kontakt jedna kolumna + ukryj hero-photo + pokaż about-photo-mobile */
 @media (max-width: 1024px) {
   .contact-inner { grid-template-columns: 1fr; }
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-photo { display: none; }
+  .hero-content { max-width: 760px; }
+
+  /* Zdjęcie Agnieszki w sekcji "Kim jestem?" — pokazane na mobile/tablet,
+     ten sam styl z gałązką co w hero-photo na desktop */
+  .about-photo-mobile {
+    display: block;
+    position: relative;
+    width: clamp(240px, 60vw, 380px);
+    aspect-ratio: 3/4;
+    margin: 0 auto var(--space-xl);
+  }
+  .about-photo-mobile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    background: var(--color-ivory);
+    position: relative;
+    z-index: 1;
+  }
+  /* Plamka moss-green — lewy dolny + prawy górny (ten sam efekt co hero-photo) */
+  .about-photo-mobile::before {
+    content: '';
+    position: absolute;
+    left: -2.5rem;
+    bottom: -2.5rem;
+    width: 75%;
+    aspect-ratio: 1;
+    background-image: url('../img/blob-moss-green.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.30;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(-15deg);
+  }
+  .about-photo-mobile::after {
+    content: '';
+    position: absolute;
+    right: -2rem;
+    top: -1.5rem;
+    width: 65%;
+    aspect-ratio: 1;
+    background-image: url('../img/blob-moss-green.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.22;
+    z-index: 0;
+    pointer-events: none;
+    transform: rotate(120deg);
+  }
 }
 
 /* Mobile główny breakpoint */
@@ -1689,6 +1922,9 @@ textarea { resize: vertical; min-height: 140px; }
     align-items: stretch;
   }
   .hero-actions .btn { width: 100%; }
+  /* Ukryj główny CTA w hero — jest już sticky CTA przypięty do strony,
+     żeby nie pokazywać tego samego "Umów bezpłatną rozmowę" dwa razy */
+  .hero-actions .btn-primary { display: none; }
 
   /* Help list: mniejsze padding */
   .help-item { padding: var(--space-md) var(--space-lg); }
