@@ -1158,6 +1158,13 @@ section {
   color: var(--color-primary-dark);
   line-height: 1.15;
 }
+/* Wyrównanie nagłówków pakietów do 3 linii na desktop —
+   żeby .package-formal pod każdą kartą był na tej samej wysokości */
+@media (min-width: 901px) {
+  .packages-grid--3 .package-name {
+    min-height: calc(3em * 1.15);
+  }
+}
 .package-formal {
   font-size: var(--size-body-sm);
   color: var(--color-accent);
